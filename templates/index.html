@@ -15,61 +15,51 @@
         <div class="centered_div" id="other_data_frame">
             <div class="row">
                 <h2>Countdown timer until new</h2>
-                <h2 id="new_year_view">0000</h2>
+                <h2 id="new_year_view" class="three_d_text">0000</h2>
                 <h2>year:</h2>
             </div>
-            <div id="countdown_timer_frame" class="row">
-                <h1 id="hours_left_view" class="three_d_text">00</h1>
-                <h1 class="three_d_text">:</h1>
-                <h1 id="minutes_left_view" class="three_d_text">00</h1>
-                <h1 class="three_d_text">:</h1>
-                <h1 id="seconds_left_view" class="three_d_text">00</h1>
-            </div>
-            <div class="row">
-                <div class="row">
-                    <h4>🌄Days passed:</h4>
-                    <h4 id="days_passed_count_view">0 / 0</h4>
-                </div> 
-                <div id="days_left_until_new_year_frame" class="row">
-                    <h4>🕯️Days left:</h4>
-                    <progress value="0" max="0" id="days_left_until_new_year_bar" class="special_progressbar">0%</progress>
-                    <h4 id="days_left_until_new_year_view">0</h4>
-                </div>
-            </div>          
+            <h1 id="time_left_until_new_year_view" class="three_d_text"></h1>
         </div> 
 
         <script>
             const body = document.body;
 
             // countdown timer elements
-            const hoursLeftView = document.getElementById("hours_left_view");
-            const minutesLeftView = document.getElementById("minutes_left_view");
-            const secondsLeftView = document.getElementById("seconds_left_view"); 
+            const newYearView = document.getElementById("new_year_view");
+            const timeUntilNewYearView = document.getElementById("time_left_until_new_year_view");
 
             // other elements
-            const newYearView = document.getElementById("new_year_view");
             const currentTimeView = document.getElementById("current_time_view");
-            const daysLeftUntilNewYearBar = document.getElementById("days_left_until_new_year_bar");
-            const daysLeftUntilNewYearView = document.getElementById("days_left_until_new_year_view");
-            const daysPassedCountView = document.getElementById("days_passed_count_view");
             const nowDataFrame = document.getElementById("now_data_frame");
             const otherDataFrame = document.getElementById("other_data_frame");
 
-            async function loadCurrentDatetime() {
+            function loadCurrentDatetime() {
                 fetch("/api/current_datetime_now")
                     .then(response => response.json())
                     .then(
                         data => { 
                             newYearView.innerText = data.new_year;
-                            currentTimeView.innerText = data.datetime_now; 
-
-                            body.style.background = data.second_hex_color;
-
-                            nowDataFrame.style.borderColor = data.first_hex_color;
-                            otherDataFrame.style.borderColor = data.first_hex_color;
+                            currentTimeView.innerText = data.time_now + " / " +
+                                data.date_now + " / " +
+                                data.month_name_now + " / " +
+                                data.day_of_week_now;
                         }
                     )
                     .catch( exception => { console.error("Exception-[get current datetime now]: ", exception); } );
+            }
+
+            function loadCurrentUiStyle() {
+                fetch("/api/time_of_year_style")
+                    .then(response => response.json())
+                    .then(
+                        data => {
+                            body.style.backgroundColor = data.primary_color;
+
+                            otherDataFrame.style.borderColor = data.secondary_color;
+                            nowDataFrame.style.borderColor = data.secondary_color;
+                        }
+                    )
+                    .catch(exception => { console.error("Exception-[get ui style data]: ", exception); })
             }
 
             function loadCountdownTimerData() {
@@ -77,38 +67,24 @@
                     .then(response => response.json())
                     .then(
                         data => {
-                            hoursLeftView.innerText = data.hours_left + " h";
-                            minutesLeftView.innerText = data.minutes_left + " m";
-                            secondsLeftView.innerText = data.seconds_left + " s";
+                            timeUntilNewYearView.innerText = data.days_left + " d: " +
+                                data.hours_left + " h: " +
+                                data.minutes_left + " m: " +
+                                data.seconds_left + " s";
                         }
                     )
                     .catch(exception => { console.error("Exception-[get countdown timer data]: ", exception); })
             }
 
-            function loadDaysLeftUntilNewYear() {
-                fetch("/api/datetime_stats_until_new_year")
-                    .then(response => response.json())
-                    .then(
-                        data => { 
-                            daysLeftUntilNewYearBar.max = data.days_count_in_current_year;
-                            daysLeftUntilNewYearBar.value = data.days_passed_in_current_year; 
-
-                            daysLeftUntilNewYearView.innerText = data.days_left_until_new_year;
-                            daysPassedCountView.innerText = data.days_in_year_and_days_passed_difference;
-                        }
-                    )
-                    .catch( exception => { console.error("Exception-[get days left until new year]: ", exception); })
-            }
-
             // periodic data fetch
             setInterval(loadCurrentDatetime, 1000);
             setInterval(loadCountdownTimerData, 1000);
-            setInterval(loadDaysLeftUntilNewYear, 1000);
+            setInterval(loadCurrentUiStyle, 1000);
 
             // fisrt launch
             loadCurrentTime();
             loadCountdownTimerData();
-            loadDaysLeftUntilNewYear();
+            loadCurrentUiStyle();
         </script>
 
         <style>
