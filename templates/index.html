@@ -38,7 +38,6 @@
                     .then(response => response.json())
                     .then(
                         data => { 
-                            newYearView.innerText = data.new_year;
                             currentTimeView.innerText = data.time_now + " / " +
                                 data.date_now + " / " +
                                 data.month_name_now + " / " +
@@ -67,6 +66,7 @@
                     .then(response => response.json())
                     .then(
                         data => {
+                            newYearView.innerText = data.new_year;
                             timeUntilNewYearView.innerText = data.days_left + " d: " +
                                 data.hours_left + " h: " +
                                 data.minutes_left + " m: " +
@@ -92,6 +92,8 @@
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 color: white;
                 text-align: center;
+                margin-top: 12%;
+                margin-bottom: 10%;
             }
 
             #countdown_timer_frame {

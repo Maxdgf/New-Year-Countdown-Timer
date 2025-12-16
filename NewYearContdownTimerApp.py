@@ -13,8 +13,7 @@ from dataclasses import dataclass
 from bottle import Bottle, template, response
 
 PATH_TO_INDEX = "templates/index.html" # path to html index
-PORT = 8000 # server port
-HOST = "localhost" # hostname
+PORT, HOST = 8000, "localhost" # server port and hostname
 
 # time until new year dataclass
 @dataclass
@@ -30,27 +29,34 @@ class StyleColorsheme:
     primary_color: str # primary
     secondary_color: str # secondary
 
-# current datetime dataclass
+# datetime now dataclass
 @dataclass
-class CurrentDatetime:
+class DatetimeNow:
     time: str # time now
     date: str # date now
-    month: str # month now
+    month_name: str # month name now
     day_of_week: str # day of the week now
 
 class DatetimeManager:
     def __init__(self): pass
 
-    SECONDS_IN_HOUR = 3600 # seconds in 1 hour
-    SECONDS_IN_MINUTE = 60 # seconds in 1 minute
+    SEC_IN_HOUR = 3600 # seconds in 1 hour
+    SEC_IN_MINUTE = 60 # seconds in 1 minute
 
-    def __is_leap(self): calendar.isleap(datetime.now().year) # checking if a year is a leap year
-
-    def get_time_now(self, pattern: str = '%H:%M:%S'): return "🕐" + datetime.now().time().strftime(pattern) # getting current formatted time
-    def get_date_now(self): return f"📆{datetime.now().date()}" # getting current date
-    def get_new_year(self): return datetime.now().year + 1 # getting new year num (current year num + 1)
+    def __is_leap(self): return calendar.isleap(datetime.now().year) # checking if a year is a leap year
+    # getting current month name
+    def __get_current_month_name(self): 
+        datetime_now = datetime.now()
+        month_index, month_name = datetime_now.month, datetime_now.strftime('%B')
+        
+        # adding to output string emoji by current month index
+        if month_index >= 1 and month_index <= 2: return "❄️" + month_name # winter
+        elif month_index >= 3 and month_index <= 5: return "🌸" + month_name # spring
+        elif month_index >= 6 and month_index <= 8: return "☀️" + month_name # summer
+        elif month_index >= 9 and month_index < 11: return "🍂" + month_name # autumn
+        elif month_index == 12: return "🎄" + month_name # (special) december month
     # getting week day (name)
-    def get_day_of_week_now(self, weekday_index: int = datetime.now().weekday()): 
+    def __get_day_of_week_now(self, weekday_index: int): 
         # returning week day name by index
         match weekday_index:
             case 0: return "Monday"
@@ -60,6 +66,14 @@ class DatetimeManager:
             case 4: return "Friday"
             case 5: return "Saturday"
             case 6: return "Sunday"
+
+    def get_datetime_now(self, pattern: str = "%H:%M:%S"):
+        datetime_now = datetime.now()
+        time, date, weekday_index = "🕐" + datetime_now.time().strftime(pattern), "📆" + str(datetime_now.date()), datetime_now.weekday()
+        weekday, month_name = self.__get_day_of_week_now(weekday_index), self.__get_current_month_name()
+        return DatetimeNow(time=time, date=date, month_name=month_name, day_of_week=weekday)
+
+    def get_new_year(self): return datetime.now().year + 1 # getting new year num (current year num + 1)
 
     # getting colorsheme by current time of year
     def get_colorsheme_of_current_time_of_year(self):
@@ -73,46 +87,20 @@ class DatetimeManager:
         elif month_index >= 6 and month_index <= 8: return StyleColorsheme(primary_color="#6cff03", secondary_color="#58d102") # summer colors
         elif month_index >= 9 and month_index < 11: return StyleColorsheme(primary_color="#ff8903", secondary_color="#db7704") # autumn colors
         elif month_index == 12: return StyleColorsheme(primary_color="#73d5ff", secondary_color="#67bce0") # december month colors
-
-    # getting current month name
-    def get_current_month_name(self): 
-        datetime_now = datetime.now()
-        month_index = datetime_now.month # current month index
-        month_name = datetime_now.strftime('%B') # current month name
-        
-        # adding to output string emoji by current month index
-        if month_index >= 1 and month_index <= 2: return "❄️" + month_name # winter
-        elif month_index >= 3 and month_index <= 5: return "🌸" + month_name # spring
-        elif month_index >= 6 and month_index <= 8: return "☀️" + month_name # summer
-        elif month_index >= 9 and month_index < 11: return "🍂" + month_name # autumn
-        elif month_index == 12: return "🎄" + month_name # (special) december month
     
-    # getting days count in current year
-    def get_days_count_in_year(self): 
-        # with leap check
-        if self.__is_leap(): return 366
-        else: return 365
+    # getting days count in current year (with leap check)
+    def get_days_count_in_year(self): return 366 if self.__is_leap() else 365
 
-    # getting time until the new year (hours, minutes, seconds)
+    # getting time until the new year (days, hours, minutes, seconds)
     def get_time_data_until_new_year(self):
         current_datetime = datetime.now()
-        destination_datetime = datetime(current_datetime.year + 1, 1, 1, 0, 0, 0) # new year datetime
+        destination_datetime = datetime(current_datetime.year + 1, 1, 1, 0, 0, 0)
         time_left = destination_datetime - current_datetime
-
-        days = time_left.days
-        seconds = int(time_left.total_seconds()) # seconds left
-        hours = int(seconds / self.SECONDS_IN_HOUR) # hours left
-        minutes = int(seconds / self.SECONDS_IN_MINUTE) # minutes left
-
-        return TimeUntilNewYear(
-            days=days,
-            hours=hours,
-            minutes=minutes,
-            seconds=seconds
-        )
+        seconds = int(time_left.total_seconds())
+        days, hours, minutes = time_left.days, int(seconds / self.SEC_IN_HOUR), int(seconds / self.SEC_IN_MINUTE)
+        return TimeUntilNewYear(days=days, hours=hours, minutes=minutes, seconds=seconds)
     
-app = Bottle() # bottle py object
-datetime_manager = DatetimeManager()
+app, datetime_manager = Bottle(), DatetimeManager() # bottle py object, datetime manager object
 
 @app.route("/") # creating index template
 def index(): return template(PATH_TO_INDEX)
@@ -120,14 +108,14 @@ def index(): return template(PATH_TO_INDEX)
 @app.route("/api/current_datetime_now")
 def get_current_time():
     response.content_type = "application/json"
+    datetime_now = datetime_manager.get_datetime_now()
     # configuring current datetime data json
     return json.dumps(
         {
-            "new_year": str(datetime_manager.get_new_year()),
-            "time_now": datetime_manager.get_time_now(),
-            "date_now": datetime_manager.get_date_now(),
-            "month_name_now": datetime_manager.get_current_month_name(),
-            "day_of_week_now": datetime_manager.get_day_of_week_now()
+            "time_now": datetime_now.time,
+            "date_now": datetime_now.date,
+            "month_name_now": datetime_now.month_name,
+            "day_of_week_now": datetime_now.day_of_week
         }
     )
 
@@ -153,15 +141,10 @@ def get_countdown_timer_until_new_year_data():
             "days_left": time_until_new_year.days,
             "hours_left": time_until_new_year.hours,
             "minutes_left": time_until_new_year.minutes,
-            "seconds_left": time_until_new_year.seconds
+            "seconds_left": time_until_new_year.seconds,
+            "new_year": str(datetime_manager.get_new_year())
         }
     )
 
-if __name__ == "__main__":
-    # launching web app
-    app.run(
-        host=HOST,
-        port=PORT,
-        debug=True, # debug
-        reloader=True # auto-reloading
-    ) 
+if __name__ == "__main__": 
+    app.run(host=HOST, port=PORT, debug=True, reloader=True) 
