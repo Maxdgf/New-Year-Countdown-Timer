@@ -50,10 +50,10 @@ class DatetimeManager:
         month_index, month_name = datetime_now.month, datetime_now.strftime('%B')
         
         # adding to output string emoji by current month index
-        if month_index >= 1 and month_index <= 2: return "❄️" + month_name # winter
-        elif month_index >= 3 and month_index <= 5: return "🌸" + month_name # spring
-        elif month_index >= 6 and month_index <= 8: return "☀️" + month_name # summer
-        elif month_index >= 9 and month_index < 11: return "🍂" + month_name # autumn
+        if 1 <= month_index <= 2: return "❄️" + month_name # winter
+        elif 3 <= month_index <= 5: return "🌸" + month_name # spring
+        elif 6 <= month_index <= 8: return "☀️" + month_name # summer
+        elif 9 <= month_index <= 11: return "🍂" + month_name # autumn
         elif month_index == 12: return "🎄" + month_name # (special) december month
     # getting week day (name)
     def __get_day_of_week_now(self, weekday_index: int): 
@@ -82,10 +82,10 @@ class DatetimeManager:
         # (primary color, secondary color)
         # -primary color = for page background mainly
         # -secondary color = for other elements(borders, buttons...)
-        if month_index >= 1 and month_index <= 2: return StyleColorsheme(primary_color="#03cffc", secondary_color="#02a9cf") # winter colors
-        elif month_index >= 3 and month_index <= 5: return StyleColorsheme(primary_color="#03fca9", secondary_color="#02cf8a") # spring colors
-        elif month_index >= 6 and month_index <= 8: return StyleColorsheme(primary_color="#6cff03", secondary_color="#58d102") # summer colors
-        elif month_index >= 9 and month_index < 11: return StyleColorsheme(primary_color="#ff8903", secondary_color="#db7704") # autumn colors
+        if 1 <= month_index <= 2: return StyleColorsheme(primary_color="#03cffc", secondary_color="#02a9cf") # winter colors
+        elif 3 <= month_index <= 5: return StyleColorsheme(primary_color="#03fca9", secondary_color="#02cf8a") # spring colors
+        elif 6 <= month_index <= 8: return StyleColorsheme(primary_color="#6cff03", secondary_color="#58d102") # summer colors
+        elif 9 <= month_index <= 11: return StyleColorsheme(primary_color="#ff8903", secondary_color="#db7704") # autumn colors
         elif month_index == 12: return StyleColorsheme(primary_color="#73d5ff", secondary_color="#67bce0") # december month colors
     
     # getting days count in current year (with leap check)
