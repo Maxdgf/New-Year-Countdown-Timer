@@ -41,6 +41,8 @@ class DatetimeManager:
     SEC_IN_HOUR = 3600 # seconds in 1 hour
     SEC_IN_MINUTE = 60 # seconds in 1 minute
 
+    new_year_num = datetime.now().year + 1
+
     # getting current month name
     def __get_current_month_name(self) -> str: 
         '''returns a current month name.'''
@@ -76,10 +78,6 @@ class DatetimeManager:
         weekday, month_name = self.__get_day_of_week_now(weekday_index), self.__get_current_month_name()
         return DatetimeNow(time=time, date=date, month_name=month_name, day_of_week=weekday)
 
-    def get_new_year(self) -> int: 
-        '''returns a new year.'''
-        return datetime.now().year + 1 # getting new year num (current year num + 1)
-
     # getting colorsheme by current time of year
     def get_colorsheme_of_current_time_of_year(self) -> StyleColorsheme:
         '''returns a StyleColorsheme dataclass object.'''
@@ -103,6 +101,15 @@ class DatetimeManager:
         seconds = int(time_left.total_seconds())
         days, hours, minutes = time_left.days, int(seconds / self.SEC_IN_HOUR), int(seconds / self.SEC_IN_MINUTE)
         return TimeUntilNewYear(days=days, hours=hours, minutes=minutes, seconds=seconds)
+    
+    # checking is new year arrived
+    def check_is_new_year_arrived(self) -> bool:
+        '''checks whether New Year has arrived and returns bool state.'''
+        current_year = datetime.now().year
+        if current_year == self.new_year_num:
+            self.new_year_num = current_year + 1 # updating, set new, new year num
+            return True
+        else: return False
     
 app, datetime_manager = Bottle(), DatetimeManager() # bottle py object, datetime manager object
 
@@ -146,8 +153,16 @@ def get_countdown_timer_until_new_year_data():
             "hours_left": time_until_new_year.hours,
             "minutes_left": time_until_new_year.minutes,
             "seconds_left": time_until_new_year.seconds,
-            "new_year": str(datetime_manager.get_new_year())
+            "new_year": str(datetime_manager.new_year_num)
         }
+    )
+
+@app.route("/api/is_new_year_arrived_state")
+def get_is_new_year_arrived_state():
+    response.content_type = "application/json"
+    # configuring is new year arrived state json
+    return json.dumps(
+        { "is_new_year_arrived": str(datetime_manager.check_is_new_year_arrived()).lower() }
     )
 
 if __name__ == "__main__": 
