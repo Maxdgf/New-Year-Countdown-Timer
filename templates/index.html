@@ -2,17 +2,17 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>New year countdown timer</title>
+        <title>🕐New year countdown timer</title>
     </head>
     <body>
         <h1>🕐New year countdown timer</h1>
-        <div class="centered_div" id="now_data_frame">
+        <div class="centered_styled_div" id="now_data_frame">
             <div id="datetime_now_frame" class="row">
                 <h3>Now:</h3>
                 <p id="current_time_view">🕐00:00:00 | 📆0-0-0 | ☀️month</p>
             </div>
         </div>    
-        <div class="centered_div" id="other_data_frame">
+        <div class="centered_styled_div" id="other_data_frame">
             <div class="row">
                 <h2>Countdown timer until new</h2>
                 <h2 id="new_year_view" class="three_d_text">0000</h2>
@@ -22,7 +22,7 @@
         </div> 
 
         <script>
-            const body = document.body;
+            const body = document.body; // body
 
             // countdown timer elements
             const newYearView = document.getElementById("new_year_view");
@@ -35,8 +35,9 @@
 
             function loadCurrentDatetime() {
                 fetch("/api/current_datetime_now")
-                    .then(response => response.json())
+                    .then(response => response.json()) // get response as json
                     .then(
+                        // process data
                         data => { 
                             currentTimeView.innerText = data.time_now + " / " +
                                 data.date_now + " / " +
@@ -44,13 +45,14 @@
                                 data.day_of_week_now;
                         }
                     )
-                    .catch( exception => { console.error("Exception-[get current datetime now]: ", exception); } );
+                    .catch( exception => { console.error("Exception-[get current datetime now]: ", exception); } ); // exception
             }
 
             function loadCurrentUiStyle() {
                 fetch("/api/time_of_year_style")
-                    .then(response => response.json())
+                    .then(response => response.json()) // get response as json
                     .then(
+                        // process data
                         data => {
                             body.style.backgroundColor = data.primary_color;
 
@@ -58,13 +60,14 @@
                             nowDataFrame.style.borderColor = data.secondary_color;
                         }
                     )
-                    .catch(exception => { console.error("Exception-[get ui style data]: ", exception); })
+                    .catch(exception => { console.error("Exception-[get ui style data]: ", exception); }); // exception
             }
 
             function loadCountdownTimerData() {
                 fetch("/api/countdown_timer_until_new_year_data")
-                    .then(response => response.json())
+                    .then(response => response.json()) // get response as json
                     .then(
+                        // process data
                         data => {
                             newYearView.innerText = data.new_year;
                             timeUntilNewYearView.innerText = data.days_left + " d: " +
@@ -73,10 +76,10 @@
                                 data.seconds_left + " s";
                         }
                     )
-                    .catch(exception => { console.error("Exception-[get countdown timer data]: ", exception); })
+                    .catch(exception => { console.error("Exception-[get countdown timer data]: ", exception); }); // exception
             }
 
-            // periodic data fetch
+            // periodic data fetch (1 second)
             setInterval(loadCurrentDatetime, 1000);
             setInterval(loadCountdownTimerData, 1000);
             setInterval(loadCurrentUiStyle, 1000);
@@ -90,7 +93,7 @@
         <style>
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                color: white;
+                color: rgb(255, 255, 255); /* default body color */
                 text-align: center;
                 margin-top: 12%;
                 margin-bottom: 10%;
@@ -108,7 +111,8 @@
                 gap: 10px;
             }
 
-            .centered_div {
+            .centered_styled_div {
+                /* with box shadow */
                 display: flex; 
                 flex-direction: column; 
                 align-items: center; 
@@ -128,11 +132,8 @@
                 flex-direction: column; 
             }
 
-            .special_progressbar {
-                accent-color: #5ecf13;
-            }
-
             .three_d_text {
+                /* 3D text style */
                 text-shadow: 
                     0 1px 0 #000000, 0 2px 0 #000000,
                     0 3px 0 #000000, 0 4px 0 #000000;
