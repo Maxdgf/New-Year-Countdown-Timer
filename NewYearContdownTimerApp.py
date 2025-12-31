@@ -48,7 +48,7 @@ class DatetimeManager:
         '''returns a current month name.'''
 
         datetime_now = datetime.now()
-        month_index, month_name = datetime_now.month, datetime_now.strftime('%B')
+        month_index, month_name = datetime_now.month, datetime_now.strftime('%B') # month data
         
         # adding to output string emoji by current month index
         if 1 <= month_index <= 2: return "❄️" + month_name # winter
@@ -105,7 +105,7 @@ class DatetimeManager:
     # checking is new year arrived
     def check_is_new_year_arrived(self) -> bool:
         '''checks whether New Year has arrived and returns bool state.'''
-        current_year = datetime.now().year
+        current_year = datetime.now().year # current year num now
         if current_year == self.new_year_num:
             self.new_year_num = current_year + 1 # updating, set new, new year num
             return True
