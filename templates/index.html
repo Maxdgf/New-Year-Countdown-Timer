@@ -32,9 +32,7 @@
             const currentTimeView = document.getElementById("current_time_view");
             const nowDataFrame = document.getElementById("now_data_frame");
             const otherDataFrame = document.getElementById("other_data_frame");
-
-            const fireworksLaunchAudioContainer = document.getElementById("fireworks_launch_audio_container");
-
+           
             function loadCurrentDatetime() {
                 fetch("/api/current_datetime_now")
                     .then(response => response.json()) // get response as json
