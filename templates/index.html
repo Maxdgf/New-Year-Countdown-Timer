@@ -10,6 +10,13 @@
             <div id="datetime_now_frame" class="row">
                 <h3>Now:</h3>
                 <p id="current_time_view">🕐00:00:00 | 📆0-0-0 | ☀️month</p>
+                <form action="/" method="post">
+                    <select name="time_format" id="time_format_select">
+                        <option value="am">AM</option>
+                        <option value="pm">PM</option>
+                    </select>
+                    <input value="set" type="submit">
+                </form>    
             </div>
         </div>    
         <div class="centered_styled_div" id="other_data_frame">

@@ -8,13 +8,13 @@ Mini 🎄new year countdown timer web-app on bottle py.
 import json
 from datetime import datetime
 from dataclasses import dataclass
-from bottle import Bottle, template, response
+from bottle import Bottle, template, response, request
 
 PATH_TO_INDEX = "templates/index.html" # path to html index
 PORT, HOST = 8000, "localhost" # server port and hostname(for debug on local machine)
 
 # time until new year dataclass
-@dataclass
+@dataclass(frozen=True)
 class TimeUntilNewYear:
     days: int # days left
     hours: int # hours left
@@ -22,13 +22,13 @@ class TimeUntilNewYear:
     seconds: int # seconds left
 
 # ui style colorsheme dataclass
-@dataclass
+@dataclass(frozen=True)
 class StyleColorsheme:
     primary_color: str # primary
     secondary_color: str # secondary
 
 # datetime now dataclass
-@dataclass
+@dataclass(frozen=True)
 class DatetimeNow:
     time: str # time now
     date: str # date now
@@ -36,12 +36,12 @@ class DatetimeNow:
     day_of_week: str # day of the week now
 
 class DatetimeManager:
-    def __init__(self): pass
+    def __init__(self): 
+        self.new_year_num = datetime.now().year + 1
+        self.time_format = "pm"
 
     SEC_IN_HOUR = 3600 # seconds in 1 hour
     SEC_IN_MINUTE = 60 # seconds in 1 minute
-
-    new_year_num = datetime.now().year + 1
 
     # getting current month name
     def __get_current_month_name(self) -> str: 
@@ -70,11 +70,18 @@ class DatetimeManager:
             case 5: return "Saturday"
             case 6: return "Sunday"
 
+    # setting time format AM/PM
+    def set_time_format(self, time_format: str) -> None:
+        '''sets a time format AM/PM.'''
+        if len(time_format) > 0 and time_format != self.time_format:
+            self.time_format = time_format
+
     # getting datetime now
-    def get_datetime_now(self, pattern: str = "%H:%M:%S") -> DatetimeNow:
+    def get_datetime_now(self) -> DatetimeNow:
         '''returns a datetime now.'''
         datetime_now = datetime.now()
-        time, date, weekday_index = "🕐" + datetime_now.time().strftime(pattern), "📆" + str(datetime_now.date()), datetime_now.weekday()
+        time_format_pattern = "%H:%M:%S PM" if self.time_format == "pm" else "%I:%M:%S AM"
+        time, date, weekday_index = "🕐" + datetime_now.time().strftime(time_format_pattern), "📆" + str(datetime_now.date()), datetime_now.weekday()
         weekday, month_name = self.__get_day_of_week_now(weekday_index), self.__get_current_month_name()
         return DatetimeNow(time=time, date=date, month_name=month_name, day_of_week=weekday)
 
@@ -96,7 +103,7 @@ class DatetimeManager:
     def get_time_data_until_new_year(self) -> TimeUntilNewYear:
         '''returns a TimeUntilNewYear dataclass object.'''
         current_datetime = datetime.now()
-        destination_datetime = datetime(current_datetime.year + 1, 1, 1, 0, 0, 0)
+        destination_datetime = datetime(current_datetime.year + 1, 1, 1, 0, 0, 0) # 01.01.new_year 00:00:00
         time_left = destination_datetime - current_datetime
         seconds = int(time_left.total_seconds())
         days, hours, minutes = time_left.days, int(seconds / self.SEC_IN_HOUR), int(seconds / self.SEC_IN_MINUTE)
@@ -115,6 +122,12 @@ app, datetime_manager = Bottle(), DatetimeManager() # bottle py object, datetime
 
 @app.route("/") # creating index template route
 def index(): return template(PATH_TO_INDEX)
+
+@app.route("/", method="POST")
+def set_time_format(): 
+    time_format = request.forms.time_format
+    datetime_manager.set_time_format(time_format=time_format)
+    return template(PATH_TO_INDEX)
 
 @app.route("/api/current_datetime_now")
 def get_current_time():
