@@ -3,20 +3,60 @@
     <head>
         <meta charset="utf-8">
         <title>🕐New year countdown timer</title>
+        <link rel="stylesheet" href="/static/css/styles.css">
     </head>
     <body>
         <h1>🕐New year countdown timer</h1>
+        <div class="centered_styled_div" id="settings_frame">
+            <div class="row">
+                <h3>Settings:</h3>
+                <form action="/set_time_format" method="post">
+                    <select name="time_format" id="time_format_select">
+                        <option value="am">AM</option>
+                        <option value="pm" selected>PM</option>
+                    </select>
+                    <input value="set time format" type="submit">
+                </form>
+                <form action="/set_time_zone" method="post">
+                    <select name="time_zone" id="time_zone_select">
+                        <optgroup>
+                            <option value="-12">-12</option>
+                            <option value="-11">-11</option>
+                            <option value="-10">-10</option>
+                            <option value="-9">-9</option>
+                            <option value="-8">-8</option>
+                            <option value="-7">-7</option>
+                            <option value="-6">-6</option>
+                            <option value="-5">-5</option>
+                            <option value="-4">-4</option>
+                            <option value="-3">-3</option>
+                            <option value="-2">-2</option>
+                            <option value="-1">-1</option>
+                        </optgroup>
+                        <option value="0" selected>0</option>
+                        <optgroup>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </optgroup>
+                    </select>
+                    <input value="set time zone" type="submit">
+                </form>
+            </div>
+        </div>    
         <div class="centered_styled_div" id="now_data_frame">
             <div id="datetime_now_frame" class="row">
                 <h3>Now:</h3>
                 <p id="current_time_view">🕐00:00:00 | 📆0-0-0 | ☀️month</p>
-                <form action="/" method="post">
-                    <select name="time_format" id="time_format_select">
-                        <option value="am">AM</option>
-                        <option value="pm">PM</option>
-                    </select>
-                    <input value="set" type="submit">
-                </form>    
             </div>
         </div>    
         <div class="centered_styled_div" id="other_data_frame">
@@ -26,142 +66,9 @@
                 <h2>year:</h2>
             </div>
             <h1 id="time_left_until_new_year_view" class="three_d_text"></h1>
-        </div> 
-
-        <script>
-            const body = document.body; // body
-
-            // countdown timer elements
-            const newYearView = document.getElementById("new_year_view");
-            const timeUntilNewYearView = document.getElementById("time_left_until_new_year_view");
-
-            // other elements
-            const currentTimeView = document.getElementById("current_time_view");
-            const nowDataFrame = document.getElementById("now_data_frame");
-            const otherDataFrame = document.getElementById("other_data_frame");
-           
-            function loadCurrentDatetime() {
-                fetch("/api/current_datetime_now")
-                    .then(response => response.json()) // get response as json
-                    .then(
-                        // process data
-                        data => { 
-                            currentTimeView.innerText = data.time_now + " / " +
-                                data.date_now + " / " +
-                                data.month_name_now + " / " +
-                                data.day_of_week_now;
-                        }
-                    )
-                    .catch( exception => { console.error("Exception-[get current datetime now]: ", exception); } ); // exception
-            }
-
-            function loadCurrentUiStyle() {
-                fetch("/api/time_of_year_style")
-                    .then(response => response.json()) // get response as json
-                    .then(
-                        // process data
-                        data => {
-                            body.style.backgroundColor = data.primary_color;
-
-                            otherDataFrame.style.borderColor = data.secondary_color;
-                            nowDataFrame.style.borderColor = data.secondary_color;
-                        }
-                    )
-                    .catch(exception => { console.error("Exception-[get ui style data]: ", exception); }); // exception
-            }
-
-            function loadCountdownTimerData() {
-                fetch("/api/countdown_timer_until_new_year_data")
-                    .then(response => response.json()) // get response as json
-                    .then(
-                        // process data
-                        data => {
-                            newYearView.innerText = data.new_year;
-                            timeUntilNewYearView.innerText = data.days_left + " d: " +
-                                data.hours_left + " h: " +
-                                data.minutes_left + " m: " +
-                                data.seconds_left + " s";
-                        }
-                    )
-                    .catch(exception => { console.error("Exception-[get countdown timer data]: ", exception); }); // exception
-            }
-
-            function loadIsNewYearArrivedState() {
-                fetch("/api/is_new_year_arrived_state")
-                    .then(response => response.json())
-                    .then(
-                        data => {
-                            var state = (data.is_new_year_arrived === "true"); // convert to bool
-
-                            if (state) {
-                                alert("New year is arrived! 🎉");
-                            }
-                        }
-                    )
-                    .catch(exception => { console.error("Exception-[get is new year arrived state]: ", exception); });
-            }
-
-            // periodic data fetch (1 second)
-            setInterval(loadCurrentDatetime, 1000);
-            setInterval(loadCountdownTimerData, 1000);
-            setInterval(loadCurrentUiStyle, 1000);
-            setInterval(loadIsNewYearArrivedState, 1000);
-
-            // fisrt launch
-            loadCurrentDateTime();
-            loadCountdownTimerData();
-            loadCurrentUiStyle();
-            loadIsNewYearArrivedState();
-        </script>
-
-        <style>
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                color: rgb(255, 255, 255); /* default body color */
-                text-align: center;
-                margin-top: 12%;
-                margin-bottom: 10%;
-            }
-
-            #countdown_timer_frame {
-                border-top: solid white 5px;
-                border-bottom: solid white 5px;
-                border-radius: 20px;
-            }
-
-            .row {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .centered_styled_div {
-                /* with box shadow */
-                display: flex; 
-                flex-direction: column; 
-                align-items: center; 
-                justify-content: center;
-                border: solid black 5px;
-                border-radius: 20px;
-                margin-top: 50px;
-                margin-right: 20%;
-                margin-left: 20%;
-                -webkit-box-shadow: 26px 26px 10px 6px rgba(34, 60, 80, 0.19);
-                -moz-box-shadow: 26px 26px 10px 6px rgba(34, 60, 80, 0.19);
-                box-shadow: 26px 26px 10px 6px rgba(34, 60, 80, 0.19);
-            }
-
-            .data_container {
-                display: flex; 
-                flex-direction: column; 
-            }
-
-            .three_d_text {
-                /* 3D text style */
-                text-shadow: 
-                    0 1px 0 #000000, 0 2px 0 #000000,
-                    0 3px 0 #000000, 0 4px 0 #000000;
-            }
-        </style>
+            <button id="copy_time_left_data">copy</button>
+        </div>
+        <script src="/static/scripts/ajax_requests.js"></script>
+        <script src="/static/scripts/user_events.js"></script>
     </body>
 </html>
