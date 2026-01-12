@@ -13,7 +13,7 @@ const otherDataFrame = document.getElementById("other_data_frame");
 var currentDateTimeId = null;
 var countdownTimerDataId = null;
 var currentUiStyleId = null;
-var IsNewYearArrivedStateId = null;
+var isNewYearArrivedStateId = null;
 
 function loadCurrentDatetime() {
     fetch("/api/current_datetime_now")
@@ -88,4 +88,4 @@ loadIsNewYearArrivedState();
 currentDateTimeId = setInterval(loadCurrentDatetime, 1000);
 countdownTimerDataId = setInterval(loadCountdownTimerData, 1000);
 currentUiStyleId = setInterval(loadCurrentUiStyle, 1000);
-IsNewYearArrivedStateId = setInterval(loadIsNewYearArrivedState, 1000);
+isNewYearArrivedStateId = setInterval(loadIsNewYearArrivedState, 1000);
