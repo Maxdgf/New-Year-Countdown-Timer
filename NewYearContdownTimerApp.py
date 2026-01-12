@@ -85,7 +85,7 @@ class DatetimeManager:
         else: self.is_time_format_pm = False
 
     # set time zone
-    def set_gmt(self, num: int) -> None:
+    def set_time_zone(self, num: int) -> None:
         '''sets time zone value.'''
         self.time_zone = num
 
@@ -151,9 +151,9 @@ def set_time_format():
     
 @app.route("/set_time_zone", method="POST")
 def set_gmt_factor():
-    time_zone = request.forms.gmt_factor
+    time_zone = request.forms.time_zone
     if time_zone: 
-        datetime_manager.set_gmt(num=int(time_zone))
+        datetime_manager.set_time_zone(num=int(time_zone))
     return redirect("/") # redirect to main page
 
 @app.route("/api/current_datetime_now")
