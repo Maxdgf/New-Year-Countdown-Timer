@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone, timedelta
 
 class DatetimeManager:
+    '''Datetime manager helps calculate and get actual datetime, time data.'''
+
     def __init__(self) -> None: 
         self.new_year_num = datetime.now().year + 1
         self.is_time_format_pm = True
@@ -47,7 +49,17 @@ class DatetimeManager:
         else: return "🎄" + month_name # (special) december month
     # get week day (name)
     def __get_day_of_week_now(self, weekday_index: int) -> str: 
-        '''returns a weekday name.'''
+        '''
+        returns a weekday name.
+
+        Parameters
+        ------------------
+        weekday_index: week day index
+
+        Returns
+        ------------------
+        day of week name str.
+        '''
 
         # return week day name by index
         match weekday_index:
@@ -61,24 +73,48 @@ class DatetimeManager:
     
     # get datetime now with specific time zone(utc)
     def __get_datetime_now(self) -> datetime:
-        '''returns a datetime now with specific time zone(utc).'''
+        '''
+        returns a datetime now with specific time zone(utc).
+
+        Returns
+        -----------------
+        datetime now.
+        '''
         utc = timezone(timedelta(hours=self.time_zone))
         return datetime.now(utc)
 
     # set time format AM/PM
     def set_time_format(self, time_format: str) -> None:
-        '''sets a time format AM/PM.'''
+        '''
+        sets a time format AM/PM.
+
+        Parameters
+        ----------------
+        time_format: time format str pattern
+        '''
         if time_format == "pm": self.is_time_format_pm = True
         else: self.is_time_format_pm = False
 
     # set time zone
     def set_time_zone(self, num: int) -> None:
-        '''sets time zone value.'''
+        '''
+        sets time zone value.
+
+        Parameters
+        ----------------
+        num: time zone num to set
+        '''
         self.time_zone = num
 
     # get datetime data now
     def get_datetime_data_now(self) -> _DatetimeNow:
-        '''returns a datetime now.'''
+        '''
+        returns a datetime now.
+
+        Returns
+        ----------------
+        _DatetimeNow data.
+        '''
         datetime_now = self.__get_datetime_now()
         time_format_pattern = "%H:%M:%S PM" if self.is_time_format_pm else "%I:%M:%S AM"
         time, date, weekday_index = "🕐" + datetime_now.time().strftime(time_format_pattern), "📆" + str(datetime_now.date()), datetime_now.weekday()
@@ -87,7 +123,13 @@ class DatetimeManager:
 
     # get colorsheme by current time of year
     def get_colorsheme_of_current_time_of_year(self) -> _StyleColorsheme:
-        '''returns a StyleColorsheme dataclass object.'''
+        '''
+        returns a StyleColorsheme object.
+
+        Returns
+        ---------------
+        _StyleColorsheme data.
+        '''
         month_index = self.__get_datetime_now().month # current month index
 
         # (primary color, secondary color)
@@ -101,7 +143,13 @@ class DatetimeManager:
 
     # get time until the new year (days, hours, minutes, seconds)
     def get_time_data_until_new_year(self) -> _TimeUntilNewYear:
-        '''returns a TimeUntilNewYear dataclass object.'''
+        '''
+        returns a TimeUntilNewYear object.
+
+        Retuns
+        ---------------
+        _TimeUntilNewYear data.
+        '''
         current_datetime = self.__get_datetime_now()
         destination_datetime = datetime(current_datetime.year + 1, 1, 1, 0, 0, 0, tzinfo=timezone.utc) # 01.01.new_year 00:00:00
         time_left = destination_datetime - current_datetime

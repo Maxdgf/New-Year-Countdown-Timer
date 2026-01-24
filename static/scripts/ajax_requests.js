@@ -10,11 +10,6 @@ const nowDataFrame = document.getElementById("now_data_frame");
 const settingsFrame = document.getElementById("settings_frame");
 const otherDataFrame = document.getElementById("other_data_frame");
 
-var currentDateTimeId = null;
-var countdownTimerDataId = null;
-var currentUiStyleId = null;
-var isNewYearArrivedStateId = null;
-
 function loadCurrentDatetime() {
     fetch("/api/current_datetime_now")
         .then(response => response.json()) // get response as json
@@ -85,7 +80,7 @@ loadCurrentUiStyle();
 loadIsNewYearArrivedState();
 
 // periodic data fetch (1 second)
-currentDateTimeId = setInterval(loadCurrentDatetime, 1000);
-countdownTimerDataId = setInterval(loadCountdownTimerData, 1000);
-currentUiStyleId = setInterval(loadCurrentUiStyle, 1000);
-isNewYearArrivedStateId = setInterval(loadIsNewYearArrivedState, 1000);
+setInterval(loadCurrentDatetime, 1000);
+setInterval(loadCountdownTimerData, 1000);
+setInterval(loadCurrentUiStyle, 1000);
+setInterval(loadIsNewYearArrivedState, 1000);

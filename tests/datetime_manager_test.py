@@ -4,6 +4,7 @@ Tests for datetime manager module
 for run test: pytest tests\datetime_manager_test.py
 '''
 
+import pytest
 from app_utils.datetime_manager import DatetimeManager
 
 datetime_manager = DatetimeManager()
