@@ -153,7 +153,7 @@ class DatetimeManager:
         current_datetime = self.__get_datetime_now()
         destination_datetime = datetime(current_datetime.year + 1, 1, 1, 0, 0, 0, tzinfo=timezone.utc) # 01.01.new_year 00:00:00
         time_left = destination_datetime - current_datetime
-        seconds = int(time_left.total_seconds())
+        seconds = int(time_left.seconds) # get seconds
         days, hours, minutes = time_left.days, int(seconds / self.SEC_IN_HOUR), int(seconds / self.SEC_IN_MINUTE)
         return self._TimeUntilNewYear(days=days, hours=hours, minutes=minutes, seconds=seconds)
     
