@@ -15,11 +15,14 @@ function loadCurrentDatetime() {
         .then(response => response.json()) // get response as json
         .then(
             // process data
-            data => { 
+            data => {
+                var month_name = data.month_name_now != null ? data.month_name_now : '?'; // month name
+                var weekday = data.day_of_week != null ? data.day_of_week : '?'; // day of week
+
                 currentTimeView.innerText = data.time_now + " / " +
                     data.date_now + " / " +
-                    data.month_name_now + " / " +
-                    data.day_of_week_now;
+                    month_name + " / " +
+                    weekday;
             }
         )
         .catch( exception => { console.error("Exception-[get current datetime now]: ", exception); } ); // exception
@@ -31,12 +34,12 @@ function loadCurrentUiStyle() {
         .then(
             // process data
             data => {
-                body.style.backgroundColor = data.primary_color; // primary color
+                body.style.backgroundColor = data.primary_color != null ? data.primary_color : "blue"; // primary color
 
-                // secondary color
-                settingsFrame.style.borderColor = data.secondary_color;
-                otherDataFrame.style.borderColor = data.secondary_color;
-                nowDataFrame.style.borderColor = data.secondary_color;
+                var secondary = data.secondary_color != null ? data.secondary_color : "cyan"; // secondary color
+                settingsFrame.style.borderColor = secondary;
+                otherDataFrame.style.borderColor = secondary;
+                nowDataFrame.style.borderColor = secondary;
             }
         )
         .catch(exception => { console.error("Exception-[get ui style data]: ", exception); }); // exception

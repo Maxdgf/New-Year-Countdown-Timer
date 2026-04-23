@@ -1,5 +1,6 @@
 """
 Mini 🎄new year countdown timer web-app on bottle py, by Maxdgf
+* GitHub - https://www.github.com/Maxdgf
 ======================================================================
 -Displays today's 📆date (🕐time, 📆date, ☀️month, day of the week).
 -The countdown to the new year in days-hours-minutes-seconds format.
@@ -64,13 +65,13 @@ def get_current_time():
 @app.route("/api/time_of_year_style")
 def get_time_of_year_style():
     response.content_type = "application/json"
-    style_colorsheme = datetime_manager.get_colorsheme_of_current_time_of_year()
+    style_color_scheme = datetime_manager.get_color_scheme_of_current_time_of_year()
 
     # configure web app ui style data json
     return json.dumps(
         {
-            "primary_color": style_colorsheme.primary_color,
-            "secondary_color": style_colorsheme.secondary_color
+            "primary_color": style_color_scheme.primary_color,
+            "secondary_color": style_color_scheme.secondary_color
         }
     )
 

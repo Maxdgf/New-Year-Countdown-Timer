@@ -7,7 +7,7 @@ class DatetimeManager:
 
     def __init__(self) -> None:
         self.new_year_num = datetime.now().year + 1
-        self.is_time_format_pm = True
+        self.time_format = "pm"
         self.time_zone = 0
 
     SEC_IN_HOUR = 3600  # seconds in 1 hour
@@ -21,9 +21,9 @@ class DatetimeManager:
         minutes: int  # minutes left
         seconds: int  # seconds left
 
-    # ui style colorsheme dataclass(only read)
+    # ui style color scheme dataclass(only read)
     @dataclass(frozen=True)
-    class _StyleColorsheme:
+    class _StyleColorScheme:
         primary_color: str  # primary
         secondary_color: str  # secondary
 
@@ -36,7 +36,7 @@ class DatetimeManager:
         day_of_week: str  # day of the week now
 
     # get current month name
-    def __get_current_month_name(self) -> str:
+    def __get_current_month_name(self) -> str | None:
         """returns a current month name."""
 
         datetime_now = self.__get_datetime_now()
@@ -51,11 +51,14 @@ class DatetimeManager:
             return "☀️" + month_name  # summer
         elif 9 <= month_index <= 11:
             return "🍂" + month_name  # autumn
-        else:
+        elif month_index == 12:
             return "🎄" + month_name  # (special) december month
+        else:
+            return None
 
     # get week day (name)
-    def __get_day_of_week_now(self, weekday_index: int) -> str:
+    @staticmethod
+    def __get_day_of_week_now(weekday_index: int) -> str | None:
         """
         returns a weekday name.
 
@@ -85,7 +88,7 @@ class DatetimeManager:
             case 6:
                 return "Sunday"
             case _:
-                return "Unknown day"
+                return None
 
     # get datetime now with specific time zone(utc)
     def __get_datetime_now(self) -> datetime:
@@ -110,10 +113,8 @@ class DatetimeManager:
         time_format: time format str pattern
         """
 
-        if time_format == "pm":
-            self.is_time_format_pm = True
-        else:
-            self.is_time_format_pm = False
+        tf = time_format.lower() # convert time format to lowercase
+        self.time_format = tf
 
     # set time zone
     def set_time_zone(self, num: int) -> None:
@@ -124,6 +125,7 @@ class DatetimeManager:
         ----------------
         num: time zone num to set
         """
+
         self.time_zone = num
 
     # get datetime data now
@@ -137,38 +139,40 @@ class DatetimeManager:
         """
 
         datetime_now = self.__get_datetime_now()
-        time_format_pattern = "%H:%M:%S PM" if self.is_time_format_pm else "%I:%M:%S AM"
+        time_format_pattern = "%H:%M:%S PM" if self.time_format == "pm" else "%I:%M:%S AM"
         time, date, weekday_index = "🕐" + datetime_now.time().strftime(time_format_pattern), "📆" + str(
             datetime_now.date()), datetime_now.weekday()
         weekday, month_name = self.__get_day_of_week_now(weekday_index), self.__get_current_month_name()
 
         return self._DatetimeNow(time=time, date=date, month_name=month_name, day_of_week=weekday)
 
-    # get colorsheme by current time of year
-    def get_colorsheme_of_current_time_of_year(self) -> _StyleColorsheme:
+    # get color scheme by current time of year
+    def get_color_scheme_of_current_time_of_year(self) -> _StyleColorScheme | None:
         """
-        returns a StyleColorsheme object.
+        returns a StyleColorScheme object.
 
         Returns
         ---------------
-        _StyleColorsheme data.
+        _StyleColorScheme data.
         """
 
         month_index = self.__get_datetime_now().month  # current month index
 
         # (primary color, secondary color)
-        # -primary color = for page background mainly
-        # -secondary color = for other elements(borders, buttons...)
+        # - primary color = for page background mainly
+        # - secondary color = for other elements(borders, buttons...)
         if 1 <= month_index <= 2:
-            return self._StyleColorsheme(primary_color="#03cffc", secondary_color="#02a9cf")  # winter colors
+            return self._StyleColorScheme(primary_color="#03cffc", secondary_color="#02a9cf")  # winter colors
         elif 3 <= month_index <= 5:
-            return self._StyleColorsheme(primary_color="#03fca9", secondary_color="#02cf8a")  # spring colors
+            return self._StyleColorScheme(primary_color="#03fca9", secondary_color="#02cf8a")  # spring colors
         elif 6 <= month_index <= 8:
-            return self._StyleColorsheme(primary_color="#6cff03", secondary_color="#58d102")  # summer colors
+            return self._StyleColorScheme(primary_color="#6cff03", secondary_color="#58d102")  # summer colors
         elif 9 <= month_index <= 11:
-            return self._StyleColorsheme(primary_color="#ff8903", secondary_color="#db7704")  # autumn colors
+            return self._StyleColorScheme(primary_color="#ff8903", secondary_color="#db7704")  # autumn colors
+        elif month_index == 12:
+            return self._StyleColorScheme(primary_color="#73d5ff", secondary_color="#67bce0")  # december month colors
         else:
-            return self._StyleColorsheme(primary_color="#73d5ff", secondary_color="#67bce0")  # december month colors
+            return None
 
     # get time until the new year (days, hours, minutes, seconds)
     def get_time_data_until_new_year(self) -> _TimeUntilNewYear:
@@ -179,6 +183,7 @@ class DatetimeManager:
         ---------------
         _TimeUntilNewYear data.
         """
+
         current_datetime = self.__get_datetime_now()
         destination_datetime = datetime(current_datetime.year + 1, 1, 1, 0, 0, 0,
                                         tzinfo=timezone.utc)  # 01.01.new_year 00:00:00

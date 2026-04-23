@@ -11,6 +11,7 @@
         <div class="centered_styled_div" id="settings_frame">
             <div class="row">
                 <h3>Settings:</h3>
+
                 <!--time format selection PM/AM-->
                 <form action="/set_time_format" method="post">
                     <select name="time_format" id="time_format_select">
@@ -19,9 +20,11 @@
                     </select>
                     <input value="set time format" type="submit">
                 </form>
+
                 <form action="/set_time_zone" method="post">
                     <!--time zone selection-->
                     <select name="time_zone" id="time_zone_select">
+
                         <optgroup label="time zone">
                             <option value="-12">-12</option>
                             <option value="-11">-11</option>
@@ -36,7 +39,9 @@
                             <option value="-2">-2</option>
                             <option value="-1">-1</option>
                         </optgroup>
-                        <option value="0" selected>0</option>
+
+                        <option value="0" selected>0</option> <!--selected option by default-->
+
                         <optgroup label="time zone">
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -55,14 +60,16 @@
                     <input value="set time zone" type="submit">
                 </form>
             </div>
-        </div>    
+        </div>
+
         <!--datetime view-->
         <div class="centered_styled_div" id="now_data_frame">
             <div id="datetime_now_frame" class="row">
                 <h3>Now:</h3>
                 <p id="current_time_view">🕐00:00:00 | 📆0-0-0 | ☀️month</p>
             </div>
-        </div> 
+        </div>
+
         <!--time until new year view-->   
         <div class="centered_styled_div" id="other_data_frame">
             <div class="row">
@@ -73,6 +80,7 @@
             <h1 id="time_left_until_new_year_view" class="three_d_text"></h1>
             <button id="copy_time_left_data">copy</button>
         </div>
+
         <script src="/static/scripts/ajax_requests.js"></script>
         <script src="/static/scripts/user_events.js"></script>
     </body>
