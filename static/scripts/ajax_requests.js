@@ -25,7 +25,7 @@ function loadCurrentDatetime() {
                     weekday;
             }
         )
-        .catch( exception => { console.error("Exception-[get current datetime now]: ", exception); } ); // exception
+        .catch( exception => { console.error("Exception-[get current datetime now]: ", exception); } ); // print exception
 }
 
 function loadCurrentUiStyle() {
@@ -42,7 +42,7 @@ function loadCurrentUiStyle() {
                 nowDataFrame.style.borderColor = secondary;
             }
         )
-        .catch(exception => { console.error("Exception-[get ui style data]: ", exception); }); // exception
+        .catch(exception => { console.error("Exception-[get ui style data]: ", exception); }); // print exception
 }
 
 function loadCountdownTimerData() {
@@ -58,7 +58,7 @@ function loadCountdownTimerData() {
                     data.seconds_left + " s";
             }
         )
-        .catch(exception => { console.error("Exception-[get countdown timer data]: ", exception); }); // exception
+        .catch(exception => { console.error("Exception-[get countdown timer data]: ", exception); }); // print exception
 }
 
 function loadIsNewYearArrivedState() {
@@ -73,10 +73,10 @@ function loadIsNewYearArrivedState() {
                 }
             }
         )
-        .catch(exception => { console.error("Exception-[get is new year arrived state]: ", exception); });
+        .catch(exception => { console.error("Exception-[get is new year arrived state]: ", exception); }); // print exception
 }
 
-// fisrt launch
+// first launch
 loadCurrentDatetime();
 loadCountdownTimerData();
 loadCurrentUiStyle();

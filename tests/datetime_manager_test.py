@@ -1,13 +1,9 @@
-"""
-Tests for datetime manager module
----------------------------------------------------
-for run test: pytest tests\datetime_manager_test.py
-"""
+# Tests for datetime manager module
+# - run test: pytest tests\datetime_manager_test.py
 
-import pytest
 from utils.datetime_manager import DatetimeManager
 
-datetime_manager = DatetimeManager()
+datetime_manager = DatetimeManager() # init datetime manager object
 
 def test_set_time_format():
     datetime_manager.set_time_format("am")

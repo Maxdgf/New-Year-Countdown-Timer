@@ -1,21 +1,21 @@
-"""
-Mini 🎄new year countdown timer web-app on bottle py, by Maxdgf
-* GitHub - https://www.github.com/Maxdgf
-======================================================================
--Displays today's 📆date (🕐time, 📆date, ☀️month, day of the week).
--The countdown to the new year in days-hours-minutes-seconds format.
-"""
+# Mini 🎄new year countdown timer web-app on bottle py, by Maxdgf
+# * GitHub - https://www.github.com/Maxdgf
+# ======================================================================
+# - Displays today's 📆date (🕐time, 📆date, ☀️month, day of the week).
+# - The countdown to the new year in days-hours-minutes-seconds format.
 
-import json, os
+import json
+import os
+
 from bottle import Bottle, template, response, request, static_file, redirect
 
 from utils.datetime_manager import DatetimeManager
 
-PATH_TO_INDEX = "templates/index.html"  # path to html index
-PORT, HOST = 8000, "localhost"  # server port and hostname(for debug on local machine)
+PATH_TO_INDEX = "templates/index.html"                      # path to html index
+PORT, HOST = 8000, "localhost"                              # server port and hostname(for debug on local machine)
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))  # project root path
 
-app, datetime_manager = Bottle(), DatetimeManager()  # bottle py object, datetime manager object
+app, datetime_manager = Bottle(), DatetimeManager()
 
 
 # create index template
