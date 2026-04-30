@@ -17,7 +17,7 @@ function loadCurrentDatetime() {
             // process data
             data => {
                 var month_name = data.month_name_now != null ? data.month_name_now : '?'; // month name
-                var weekday = data.day_of_week != null ? data.day_of_week : '?'; // day of week
+                var weekday = data.day_of_week_now != null ? data.day_of_week_now : '?'; // day of week
 
                 currentTimeView.innerText = data.time_now + " / " +
                     data.date_now + " / " +
