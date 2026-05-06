@@ -141,7 +141,7 @@ class DatetimeManager:
 
         datetime_now = self.__get_datetime_now()
         time_format_pattern = "%H:%M:%S PM" if self.time_format == "pm" else "%I:%M:%S AM"
-        time, date = f"🕐{datetime_now.time().strftime(time_format_pattern)}", f"📆{datetime_now.date()}"
+        time, date = f"🕐{datetime_now.strftime(time_format_pattern)}", f"📆{datetime_now.date()}"
         weekday, month_name = self.__get_day_of_week_now(datetime_now.weekday()), self.__get_current_month_name()
 
         return self._DatetimeNow(time=time, date=date, month_name=month_name, day_of_week=weekday)
