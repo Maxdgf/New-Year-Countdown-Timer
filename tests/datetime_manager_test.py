@@ -5,20 +5,24 @@ from utils.datetime_manager import DatetimeManager
 
 datetime_manager = DatetimeManager() # init datetime manager object
 
+# test set time format function
 def test_set_time_format():
     datetime_manager.set_time_format("am")
     assert datetime_manager.time_format == "am"
 
+# test set time zone function
 def test_set_time_zone():
     datetime_manager.set_time_zone(2)
     assert datetime_manager.time_zone == 2
 
+# test get datetime data now function
 def test_get_datetime_data_now():
     data = datetime_manager.get_datetime_data_now()
 
     assert data.month_name is not None
     assert data.day_of_week is not None
 
+# test get color scheme of current time of year function
 def test_get_color_scheme_of_current_time_of_year():
     color_scheme = datetime_manager.get_color_scheme_of_current_time_of_year()
     assert color_scheme is not None
