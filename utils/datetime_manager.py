@@ -93,7 +93,7 @@ class DatetimeManager:
             case 6:
                 return "Sunday"
             case _:
-                return None
+                return None # unknown weekday
 
     def __get_datetime_now(self) -> datetime:
         """
@@ -117,7 +117,7 @@ class DatetimeManager:
         """
 
         tf = time_format.lower()  # convert time format to lowercase
-        self.time_format = tf
+        self.time_format = tf     # set time format
 
     def set_time_zone(self, num: int) -> None:
         """
@@ -128,7 +128,7 @@ class DatetimeManager:
         num: time zone num to set
         """
 
-        self.time_zone = num
+        self.time_zone = num # set time zone
 
     def get_datetime_data_now(self) -> _DatetimeNow:
         """
@@ -139,10 +139,13 @@ class DatetimeManager:
         _DatetimeNow data.
         """
 
+        # get datetime now
         datetime_now = self.__get_datetime_now()
-        time_format_pattern = "%H:%M:%S PM" if self.time_format == "pm" else "%I:%M:%S AM"
-        time, date = f"🕐{datetime_now.strftime(time_format_pattern)}", f"📆{datetime_now.date()}"
-        weekday, month_name = self.__get_day_of_week_now(datetime_now.weekday()), self.__get_current_month_name()
+        time_format_pattern = "%H:%M:%S PM" if self.time_format == "pm" else "%I:%M:%S AM" # time format AM/PM
+        time = f"🕐{datetime_now.strftime(time_format_pattern)}"                           # formatted time string
+        date = f"📆{datetime_now.date()}"                                                  # formatted date string
+        weekday = self.__get_day_of_week_now(datetime_now.weekday())                       # current weekday name
+        month_name = self.__get_current_month_name()                                       # current month name
 
         return self._DatetimeNow(time=time, date=date, month_name=month_name, day_of_week=weekday)
 
@@ -182,6 +185,7 @@ class DatetimeManager:
         _TimeUntilNewYear data.
         """
 
+        # current datetime
         current_datetime = self.__get_datetime_now()
 
         # 01.01.new_year 00:00:00
@@ -195,9 +199,12 @@ class DatetimeManager:
             tzinfo=timezone.utc
         )
 
+        # get time left until new year data
         time_left = destination_datetime - current_datetime
-        seconds = int(time_left.seconds)  # get seconds
-        days, hours, minutes = time_left.days, int(seconds / self.SEC_IN_HOUR), int(seconds / self.SEC_IN_MINUTE)
+        seconds = int(time_left.seconds)                    # get seconds
+        days = time_left.days                               # get days
+        hours = seconds // self.SEC_IN_HOUR                 # get hours
+        minutes = seconds // self.SEC_IN_MINUTE             # get minutes
 
         return self._TimeUntilNewYear(days=days, hours=hours, minutes=minutes, seconds=seconds)
 
